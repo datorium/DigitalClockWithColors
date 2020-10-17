@@ -16,11 +16,11 @@ namespace DigitalClockWithColors
         int sec = 0;
         int min = 0;
         int hou = 0;
+        Random rand = new Random();
 
         public Form1()
         {
-            InitializeComponent();
-            MainTimer.Start();
+            InitializeComponent();            
         }
 
         private void MainTimer_Tick(object sender, EventArgs e)
@@ -30,11 +30,23 @@ namespace DigitalClockWithColors
             {
                 sec += 1;
                 dsec = 0;
+                ChangeBackgroundColor();
             }
             if(sec == 60)
             {
                 sec = 0;
+                min += 1;
             }
+            if(min == 60)
+            {
+                min = 0;
+                hou += 1;
+            }
+            if(hou == 24)
+            {
+                hou = 0;
+            }
+
             UpdateClockDisplay();
         }
 
@@ -46,6 +58,38 @@ namespace DigitalClockWithColors
             timeText += sec.ToString("00") + ":";
             timeText += dsec.ToString("0");
             ClockDisplay.Text = timeText;
+        }
+
+        private void StartButton_Click(object sender, EventArgs e)
+        {
+            MainTimer.Start();
+            StartButton.Text = "Start";
+        }
+
+        private void ResetButton_Click(object sender, EventArgs e)
+        {
+            MainTimer.Stop();
+            dsec = 0;
+            sec = 0;
+            min = 0;
+            hou = 0;
+            UpdateClockDisplay();
+            StartButton.Text = "Start";
+            this.BackColor = Color.Black;
+        }
+
+        private void PauseButton_Click(object sender, EventArgs e)
+        {
+            MainTimer.Stop();
+            StartButton.Text = "Resume";
+        }
+
+        private void ChangeBackgroundColor()
+        {
+            int redValue = rand.Next(0, 256);
+            int greenValue = rand.Next(0, 256);
+            int blueValue = rand.Next(0, 256);
+            this.BackColor = Color.FromArgb(redValue, greenValue, blueValue);
         }
     }
 }
